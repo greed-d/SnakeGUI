@@ -37,6 +37,28 @@ class SNAKE:
         self.direction = Vector2(1, 0)
         self.newBlock = False
 
+        self.headUp = pygame.image.load("./images/headUp.png").convert_alpha()
+        self.headDown = pygame.image.load("./images/headDown.png").convert_alpha()
+        self.headLeft = pygame.image.load("./images/headLeft.png").convert_alpha()
+        self.headRight = pygame.image.load("./images/headRight.png").convert_alpha()
+
+        self.tailUp = pygame.image.load("./images/tailUp.png").convert_alpha()
+        self.tailDown = pygame.image.load("./images/tailDown.png").convert_alpha()
+        self.tailLeft = pygame.image.load("./images/tailLeft.png").convert_alpha()
+        self.tailRight = pygame.image.load("./images/tailRight.png").convert_alpha()
+
+        self.bodyVertical = pygame.image.load(
+            "./images/bodyVertical.png"
+        ).convert_alpha()
+        self.bodyHorizontal = pygame.image.load(
+            "./images/bodyHorizontal.png"
+        ).convert_alpha()
+
+        self.bodyTL = pygame.image.load("./images/bodyTL.png").convert_alpha()
+        self.bodyTR = pygame.image.load("./images/bodyTR.png").convert_alpha()
+        self.bodyBL = pygame.image.load("./images/bodyBL.png").convert_alpha()
+        self.bodyBR = pygame.image.load("./images/bodyBR.png").convert_alpha()
+
     def drawBody(self):
         for block in self.body:
             xPos = int(block.x * width)
