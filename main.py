@@ -163,6 +163,9 @@ class SNAKE:
     def playCruchSound(self):
         self.crunchSound.play()
 
+    def reset(self):
+        self.body = [Vector2(5, 10), Vector2(4, 10), Vector2(3, 10)]
+
 
 class MAIN:
     def __init__(self):
@@ -200,8 +203,7 @@ class MAIN:
                 self.gameOver()
 
     def gameOver(self):
-        pygame.quit()
-        sys.exit()
+        self.snake.reset()
 
     def grassPattern(self):
         grassColor = (167, 209, 61)
