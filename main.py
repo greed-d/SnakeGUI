@@ -35,7 +35,7 @@ class FRUIT:
 class SNAKE:
     def __init__(self):
         self.body = [Vector2(5, 10), Vector2(4, 10), Vector2(3, 10)]
-        self.direction = Vector2(1, 0)
+        self.direction = Vector2(0, 0)
         self.newBlock = False
 
         self.headUp = pygame.image.load("./images/headUp.png").convert_alpha()
@@ -165,6 +165,7 @@ class SNAKE:
 
     def reset(self):
         self.body = [Vector2(5, 10), Vector2(4, 10), Vector2(3, 10)]
+        self.direction = Vector2(0, 0)
 
 
 class MAIN:
