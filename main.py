@@ -3,6 +3,7 @@ from pygame.math import Vector2
 from random import randint
 
 # Initialize game
+pygame.mixer.pre_init(44100, -16, 2, 512)
 pygame.init()
 
 width = 40
@@ -58,6 +59,8 @@ class SNAKE:
         self.bodyTR = pygame.image.load("./images/bodyTR.png").convert_alpha()
         self.bodyBL = pygame.image.load("./images/bodyBL.png").convert_alpha()
         self.bodyBR = pygame.image.load("./images/bodyBR.png").convert_alpha()
+
+        self.crunchSound = pygame.mixer.Sound("./sound/crunch.wav")
 
     def drawBody(self):
 
@@ -157,6 +160,9 @@ class SNAKE:
     def addBlock(self):
         self.newBlock = True
 
+    def playCruchSound(self):
+        self.crunchSound.play()
+
 
 class MAIN:
     def __init__(self):
@@ -181,6 +187,7 @@ class MAIN:
 
             # Add extra block to the tail of snake
             self.snake.addBlock()
+            self.snake.playCruchSound()
 
     def checkFail(self):
         # Check if snake hit the wall
