@@ -1,5 +1,4 @@
 import pygame, sys
-from pygame.constants import K_LEFT
 from pygame.math import Vector2
 from random import randint
 
@@ -13,6 +12,7 @@ rows = 20
 screen = pygame.display.set_mode((width * rows, width * rows))
 clock = pygame.time.Clock()
 apple = pygame.image.load("./images/apple.png").convert_alpha()
+gameFont = pygame.font.Font(None, 52)
 running = True
 
 
@@ -169,8 +169,10 @@ class MAIN:
         self.checkFail()
 
     def drawElements(self):
+        self.grassPattern()
         self.snake.drawBody()
         self.fruit.drawFruit()
+        self.drawScore()
 
     def checkCollision(self):
         if self.fruit.pos == self.snake.body[0]:
@@ -194,6 +196,41 @@ class MAIN:
         pygame.quit()
         sys.exit()
 
+    def grassPattern(self):
+        grassColor = (167, 209, 61)
+
+        for row in range(width):
+            if row % 2 == 0:
+                for col in range(width):
+                    if col % 2 == 0:
+                        grassRect = pygame.Rect(col * width, row * width, width, width)
+                        pygame.draw.rect(screen, grassColor, grassRect)
+
+            else:
+                for col in range(width):
+                    if col % 2 != 0:
+                        grassRect = pygame.Rect(col * width, row * width, width, width)
+                        pygame.draw.rect(screen, grassColor, grassRect)
+
+    def drawScore(self):
+        scoreText = str(len(self.snake.body) - 3)
+        scoreSurface = gameFont.render(scoreText, True, (56, 74, 12))
+        scoreX = int(width * rows - 60)
+        scoreY = int(width * rows - 40)
+        scoreRect = scoreSurface.get_rect(center=(scoreX, scoreY))
+        appleRect = apple.get_rect(midright=(scoreRect.left, scoreRect.centery))
+        bgRect = pygame.Rect(
+            appleRect.left,
+            appleRect.top,
+            appleRect.width + scoreRect.width + 6,
+            appleRect.height,
+        )
+
+        pygame.draw.rect(screen, (164, 209, 61), bgRect)
+        screen.blit(scoreSurface, scoreRect)
+        screen.blit(apple, appleRect)
+        pygame.draw.rect(screen, (56, 74, 12), bgRect, 2)
+
 
 mainGame = MAIN()
 
@@ -206,8 +243,6 @@ def main():
     global screen, running
 
     while running:
-
-        screen.fill((255, 255, 255))
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -234,9 +269,10 @@ def main():
                     if mainGame.snake.direction.x != 1:
                         mainGame.snake.direction = Vector2(-1, 0)
 
-        clock.tick(60)
+        screen.fill((175, 215, 70))
         mainGame.drawElements()
         pygame.display.update()
+        clock.tick(60)
 
 
 main()
