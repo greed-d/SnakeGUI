@@ -60,12 +60,87 @@ class SNAKE:
         self.bodyBR = pygame.image.load("./images/bodyBR.png").convert_alpha()
 
     def drawBody(self):
-        for block in self.body:
+
+        self.updateHeadGrapics()
+        self.updateTailGraphics()
+
+        for index, block in enumerate(self.body):
             xPos = int(block.x * width)
             yPos = int(block.y * width)
 
             bodyRect = pygame.Rect(xPos, yPos, width, width)
-            pygame.draw.rect(screen, (5, 19, 141), bodyRect)
+
+            # What direction is snake facing?
+            if index == 0:
+                screen.blit(self.head, bodyRect)
+            elif index == len(self.body) - 1:
+                screen.blit(self.tail, bodyRect)
+            else:
+                prevBlock = self.body[index + 1] - block
+                nextBlock = self.body[index - 1] - block
+
+                if prevBlock.x == nextBlock.x:
+                    screen.blit(self.bodyVertical, bodyRect)
+
+                if prevBlock.y == nextBlock.y:
+                    screen.blit(self.bodyHorizontal, bodyRect)
+
+                else:
+                    if (
+                        prevBlock.x == -1
+                        and nextBlock.y == -1
+                        or prevBlock.y == -1
+                        and nextBlock.x == -1
+                    ):
+                        screen.blit(self.bodyTL, bodyRect)
+
+                    elif (
+                        prevBlock.x == -1
+                        and nextBlock.y == 1
+                        or prevBlock.y == 1
+                        and nextBlock.x == -1
+                    ):
+                        screen.blit(self.bodyBL, bodyRect)
+
+                    elif (
+                        prevBlock.x == 1
+                        and nextBlock.y == -1
+                        or prevBlock.y == -1
+                        and nextBlock.x == 1
+                    ):
+                        screen.blit(self.bodyTR, bodyRect)
+
+                    elif (
+                        prevBlock.x == 1
+                        and nextBlock.y == 1
+                        or prevBlock.y == 1
+                        and nextBlock.x == 1
+                    ):
+                        screen.blit(self.bodyBR, bodyRect)
+
+    def updateHeadGrapics(self):
+        headRelation = self.body[1] - self.body[0]
+
+        if headRelation == Vector2(1, 0):
+            self.head = self.headLeft
+        elif headRelation == Vector2(-1, 0):
+            self.head = self.headRight
+        elif headRelation == Vector2(0, 1):
+            self.head = self.headUp
+        elif headRelation == Vector2(0, -1):
+            self.head = self.headDown
+
+    def updateTailGraphics(self):
+        tailRelation = self.body[-2] - self.body[-1]
+
+        if tailRelation == Vector2(1, 0):
+            self.tail = self.tailLeft
+        elif tailRelation == Vector2(-1, 0):
+            self.tail = self.tailRight
+        elif tailRelation == Vector2(0, 1):
+            self.tail = self.tailUp
+        elif tailRelation == Vector2(0, -1):
+            self.tail = self.tailDown
 
     def moveSnake(self):
         if self.newBlock == True:
@@ -112,7 +187,7 @@ class MAIN:
 
         # Check if snake collided with itself
         for block in self.snake.body[1:]:
-            if block == self.snake.body:
+            if block == self.snake.body[0]:
                 self.gameOver()
 
     def gameOver(self):
@@ -123,7 +198,7 @@ class MAIN:
 mainGame = MAIN()
 
 screenUPDATE = pygame.USEREVENT
-pygame.time.set_timer(screenUPDATE, 150)
+pygame.time.set_timer(screenUPDATE, 100)
 running = True
 
 
@@ -132,7 +207,7 @@ def main():
 
     while running:
 
-        screen.fill((21, 141, 5))
+        screen.fill((255, 255, 255))
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -147,15 +222,15 @@ def main():
                     if mainGame.snake.direction.y != 1:
                         mainGame.snake.direction = Vector2(0, -1)
 
-                elif event.key == pygame.K_s:
+                if event.key == pygame.K_s:
                     if mainGame.snake.direction.y != -1:
                         mainGame.snake.direction = Vector2(0, 1)
 
-                elif event.key == pygame.K_d:
+                if event.key == pygame.K_d:
                     if mainGame.snake.direction.x != -1:
                         mainGame.snake.direction = Vector2(1, 0)
 
-                elif event.key == pygame.K_a:
+                if event.key == pygame.K_a:
                     if mainGame.snake.direction.x != 1:
                         mainGame.snake.direction = Vector2(-1, 0)
 
